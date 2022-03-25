@@ -1,24 +1,25 @@
 import { useState } from "react";
 
-const Display = ({ counter }) => <div>{counter}</div>;
+const Display = (props) => <div>{props.value}</div>;
 
-const CustomButton = ({ onClick, text }) => (
-	<button onClick={onClick}>{text}</button>
+const Button = ({ handleClick, text }) => (
+	<button onClick={handleClick}>{text}</button>
 );
 
 const App = () => {
-	const [counter, setCounter] = useState(0);
+	const [value, setValue] = useState(10);
 
-	const increment = () => setCounter(counter + 1);
-	const decrement = () => setCounter(counter - 1);
-	const setToZero = () => setCounter(0);
+	const setToValue = (newValue) => {
+		console.log("value now", newValue);
+		setValue(newValue);
+	};
 
 	return (
 		<div>
-			<Display counter={counter} />
-			<CustomButton onClick={decrement} text="minus" />
-			<CustomButton onClick={setToZero} text="zero" />
-			<CustomButton onClick={increment} text="plus" />
+			<Display value={value} />
+			<Button handleClick={() => setToValue(1000)} text="thousand" />
+			<Button handleClick={() => setToValue(0)} text="reset" />
+			<Button handleClick={() => setToValue(value + 1)} text="increment" />
 		</div>
 	);
 };
