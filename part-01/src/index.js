@@ -1,4 +1,4 @@
 import ReactDOM from "react-dom";
-import Unicef from "./Unicef/App";
+import Anecdotes from "./Anecdotes/App";
 
-ReactDOM.render(<Unicef />, document.querySelector("#root"));
+ReactDOM.render(<Anecdotes />, document.querySelector("#root"));
