@@ -2,7 +2,7 @@ import Header from "./Header";
 import Content from "./Content";
 import Total from "./Total";
 
-const Ex1_5 = () => {
+const CourseInfo = () => {
 	const course = {
 		name: "Half Stack application development",
 		parts: [
@@ -30,4 +30,4 @@ const Ex1_5 = () => {
 	);
 };
 
-export default Ex1_5;
+export default CourseInfo;
