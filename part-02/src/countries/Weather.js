@@ -2,7 +2,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 function Weather({ country }) {
-	const API_KEY = process.env.WEATHER_API_KEY;
+	const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
+	console.log(API_KEY);
 	const [capital] = country.capital;
 	const URL = `https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${API_KEY}`;
 
