@@ -15,7 +15,7 @@ function App() {
 
 	useEffect(() => {
 		const data = countries.filter((country) =>
-			country.name.common.toLowerCase().includes(value.toLowerCase())
+			country.name.common.toLowerCase().startsWith(value.toLowerCase())
 		);
 		setFiltered(data);
 	}, [value, countries]);

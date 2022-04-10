@@ -3,7 +3,11 @@ import React, { useEffect, useState } from "react";
 
 function Weather({ country }) {
 	const API_KEY = process.env.REACT_APP_WEATHER_API_KEY;
-	console.log(API_KEY);
+
+	if (!API_KEY) {
+		alert("Please put the API key in .env file");
+	}
+
 	const [capital] = country.capital;
 	const URL = `https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${API_KEY}`;
 

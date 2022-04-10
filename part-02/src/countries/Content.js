@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Country from "./Country";
+import CountryRow from "./CountryRow";
 import Weather from "./Weather";
 
 function Content({ data }) {
@@ -26,18 +27,11 @@ function Content({ data }) {
 		return (
 			<div>
 				{data.map((country) => (
-					<div
-						style={{
-							display: "flex",
-							justifyContent: "space-between",
-							maxWidth: "500px",
-						}}
-					>
-						<span key={country.name.common}>{country.name.common}</span>
-						<button onClick={() => setShow(country)} key={country.area}>
-							Show
-						</button>
-					</div>
+					<CountryRow
+						country={country}
+						setShow={setShow}
+						key={country.name.common}
+					/>
 				))}
 
 				<div>
