@@ -42,10 +42,11 @@ const App = () => {
 		setSearch(e.target.value.toLowerCase());
 	};
 
-	const handleDelete = (name, id) => {
-		if (!window.confirm(`Delete ${name} ?id`)) return;
+	const handleDelete = (id) => {
+		const person = persons.find((person) => person.id === id);
+		if (!window.confirm(`Delete ${person.name}'s number?`)) return;
 
-		phonebookService.remove(id).then((response) => console.log(response));
+		phonebookService.remove(id);
 		setPersons(persons.filter((person) => person.id !== id));
 	};
 
@@ -73,7 +74,7 @@ const App = () => {
 				<Person
 					key={person.id}
 					person={person}
-					handleDelete={() => handleDelete(person.name, person.id)}
+					handleDelete={() => handleDelete(person.id)}
 				/>
 			))}
 		</div>
