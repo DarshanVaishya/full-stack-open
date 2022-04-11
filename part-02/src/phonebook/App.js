@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import Filter from "../components/Filter";
+import Person from "../components/Person";
 import PersonForm from "../components/PersonForm";
-import Persons from "../components/Persons";
+import phonebookService from "../services/phonebook";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
@@ -11,9 +11,8 @@ const App = () => {
 	const [search, setSearch] = useState("");
 
 	useEffect(() => {
-		axios.get("http://www.localhost:3001/persons").then((resp) => {
-			console.log(resp.data);
-			setPersons(resp.data);
+		phonebookService.getAll().then((initialPersons) => {
+			setPersons(initialPersons);
 		});
 	}, []);
 
@@ -27,19 +26,27 @@ const App = () => {
 			return alert(`${newName} is already added to phonebook`);
 		}
 
-		setPersons(
-			persons.concat({
-				name: newName,
-				number: newNumber,
-				id: persons.length + 1,
-			})
-		);
-		setNewName("");
-		setNewNumber("");
+		const newPerson = {
+			name: newName,
+			number: newNumber,
+		};
+
+		phonebookService.create(newPerson).then((newPerson) => {
+			setPersons(persons.concat(newPerson));
+			setNewName("");
+			setNewNumber("");
+		});
 	};
 
 	const handleSearch = (e) => {
 		setSearch(e.target.value.toLowerCase());
+	};
+
+	const handleDelete = (name, id) => {
+		if (!window.confirm(`Delete ${name} ?id`)) return;
+
+		phonebookService.remove(id).then((response) => console.log(response));
+		setPersons(persons.filter((person) => person.id !== id));
 	};
 
 	const toShow =
@@ -62,7 +69,13 @@ const App = () => {
 			/>
 
 			<h3>Numbers</h3>
-			<Persons persons={toShow} />
+			{toShow.map((person) => (
+				<Person
+					key={person.id}
+					person={person}
+					handleDelete={() => handleDelete(person.name, person.id)}
+				/>
+			))}
 		</div>
 	);
 };
