@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Filter from "../components/Filter";
 import Person from "../components/Person";
 import PersonForm from "../components/PersonForm";
-import phonebookService from "../services/phonebook";
+import * as phonebookService from "../services/phonebook";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
@@ -19,23 +19,35 @@ const App = () => {
 	const handleSubmit = (e) => {
 		e.preventDefault();
 
-		const alreadyExists = persons.some(
+		const person = persons.find(
 			(person) => person.name.toLowerCase() === newName.toLocaleLowerCase()
 		);
-		if (alreadyExists) {
-			return alert(`${newName} is already added to phonebook`);
+
+		if (person) {
+			const text = `${person.name} is already added to phonebook, replace the old number with a new one?`;
+			if (!window.confirm(text)) return;
+
+			phonebookService
+				.update(person.id, { number: newNumber })
+				.then((changedPerson) =>
+					setPersons(
+						persons.map((current) =>
+							current.id !== person.id ? current : changedPerson
+						)
+					)
+				);
+		} else {
+			const newPerson = {
+				name: newName,
+				number: newNumber,
+			};
+
+			phonebookService.create(newPerson).then((newPerson) => {
+				setPersons(persons.concat(newPerson));
+			});
 		}
-
-		const newPerson = {
-			name: newName,
-			number: newNumber,
-		};
-
-		phonebookService.create(newPerson).then((newPerson) => {
-			setPersons(persons.concat(newPerson));
-			setNewName("");
-			setNewNumber("");
-		});
+		setNewName("");
+		setNewNumber("");
 	};
 
 	const handleSearch = (e) => {
