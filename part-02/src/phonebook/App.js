@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import Filter from "../components/Filter";
 import Person from "../components/Person";
 import PersonForm from "../components/PersonForm";
+import Notification from "../components/Notification";
 import * as phonebookService from "../services/phonebook";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
 	const [newName, setNewName] = useState("");
 	const [newNumber, setNewNumber] = useState("");
+	const [message, setMessage] = useState({});
 	const [search, setSearch] = useState("");
 
 	useEffect(() => {
@@ -35,7 +37,13 @@ const App = () => {
 							current.id !== person.id ? current : changedPerson
 						)
 					)
-				);
+				)
+				.catch(() => {
+					setMessage({
+						text: `Information of ${person.name} is already been removed from the server.`,
+					});
+					setTimeout(() => setMessage({}), 5000);
+				});
 		} else {
 			const newPerson = {
 				name: newName,
@@ -45,6 +53,8 @@ const App = () => {
 			phonebookService.create(newPerson).then((newPerson) => {
 				setPersons(persons.concat(newPerson));
 			});
+			setMessage({ text: `Added ${newPerson.name}`, type: "message" });
+			setTimeout(() => setMessage({}), 5000);
 		}
 		setNewName("");
 		setNewNumber("");
@@ -69,7 +79,8 @@ const App = () => {
 
 	return (
 		<div>
-			<h2>Phonebook</h2>
+			<h1>Phonebook</h1>
+			<Notification message={message.text} type={message.type} />
 			<Filter search={search} handleSearch={handleSearch} />
 
 			<h3>Add a new contact</h3>
